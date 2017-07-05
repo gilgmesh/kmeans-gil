@@ -22,32 +22,27 @@ namespace MvcApplication1.Controllers
         }
 
         // GET clustering
-        public IEnumerable<Triple> Get()
+        // public IEnumerable<Triple> Get()
+        public IEnumerable<int> Get()
         {
             var kmeans = new Kmeans.Kmeans();
             var lines = GetPoints();
             var coords = ReadPoints();
 
-            var coordinates = coords as ClusteringController.Coordinate[] ?? coords.ToArray();
+            var coordinates = coords as Coordinate[] ?? coords.ToArray();
 
             double averageDistanceToCentroids;
             Coordinate[] centroids;
             var clustering = kmeans.K_means(coordinates, out centroids, out averageDistanceToCentroids).ToArray();
 
-            var result = new List<Triple>();
-            for (var i = 0; i < coordinates.Length; i++)
+            /*
+            return coordinates.Select((t, i) => new Triple
             {
-                var item = new Triple
-                {
-                    X = coordinates[i].X,
-                    Y = coordinates[i].Y,
-                    Cluster = clustering[i]
-                };
+                X = t.X, Y = t.Y, Cluster = clustering[i]
+            }).ToArray();
+             * */
 
-                result.Add(item);
-            }
-
-            return result.ToArray();
+            return clustering;
         }
 
         //
