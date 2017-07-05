@@ -22,8 +22,7 @@ namespace MvcApplication1.Controllers
         }
 
         // GET clustering
-        // public IEnumerable<Triple> Get()
-        public IEnumerable<int> Get()
+        public IEnumerable<string> Get()
         {
             var kmeans = new Kmeans.Kmeans();
             var lines = GetPoints();
@@ -35,14 +34,14 @@ namespace MvcApplication1.Controllers
             Coordinate[] centroids;
             var clustering = kmeans.K_means(coordinates, out centroids, out averageDistanceToCentroids).ToArray();
 
-            /*
-            return coordinates.Select((t, i) => new Triple
+            var result = coordinates.Select((t, i) => new Triple
             {
                 X = t.X, Y = t.Y, Cluster = clustering[i]
             }).ToArray();
-             * */
 
-            return clustering;
+            var stringResult = result.Select(i => i.ToString()).ToArray();
+
+            return stringResult;
         }
 
         //
