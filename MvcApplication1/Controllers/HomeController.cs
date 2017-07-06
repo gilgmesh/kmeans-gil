@@ -7,7 +7,7 @@ namespace MvcApplication1.Controllers
         public string Index()
         {
             return "Hello from gil's k-means service<br> &rarr; to see the results of the Google 4000 set, enter the following URL:<br>" +
-                "&rarr; http://kmeans-gil.apphb.com/clustering";
+                "&rarr; &emsp; http://kmeans-gil.apphb.com/clustering";
         }
     }
 }
