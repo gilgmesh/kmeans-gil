@@ -83,7 +83,7 @@ namespace MvcApplication1.Kmeans
             out ClusteringController.Coordinate[] centroids,
             out double averageDistanceToCentroids)
         {
-            const int maxTriesTillDone = 2; // 100;
+            const int maxTriesTillDone = 20; // 100;
             var triesTillDone = maxTriesTillDone;
             Console.WriteLine("k = {0}", k);
             Console.WriteLine("   till done : {0}", triesTillDone);

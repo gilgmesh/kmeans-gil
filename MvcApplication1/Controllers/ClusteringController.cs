@@ -49,6 +49,12 @@ namespace MvcApplication1.Controllers
             return stringResult;
         }
 
+        // GET clustering?num_clusters=4&max_iterations=100
+        public string Get(int num_clusters=4, int max_iterations=100)
+        {
+            return "Sarah";
+        }
+
         //
         // GET: /Clustering/Details/5
         /*
