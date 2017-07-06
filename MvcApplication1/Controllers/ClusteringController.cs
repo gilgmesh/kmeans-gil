@@ -39,7 +39,7 @@ namespace MvcApplication1.Controllers
                 X = t.X, Y = t.Y, Cluster = clustering[i]
             }).ToArray();
 
-            var stringResult = result.Select(i => i.ToString()).ToArray();
+            var stringResult = result.Select(i => string.Format("({0:0.3}, {1:0.3}) : {2}", i.X, i.Y, i.Cluster)).ToArray();
 
             return stringResult;
         }
@@ -62,7 +62,7 @@ namespace MvcApplication1.Controllers
             foreach (var line in lines)
             {
                 var items = line.Split(',');
-                var coord = new Coordinate { X = Convert.ToDouble(items[0]), Y = Convert.ToDouble(items[1]) };
+                var coord = new Coordinate { X = Double.Parse(items[0]), Y = Double.Parse(items[1]) };
 
                 coords.Add(coord);
             }
@@ -4072,7 +4072,7 @@ namespace MvcApplication1.Controllers
                 "176.17,5|" +
                 "170.91,12|" +
                 "176.14,5|" +
-                "168.03,9|";
+                "168.03,9";
 
             return result;
         }
