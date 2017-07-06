@@ -25,7 +25,6 @@ namespace MvcApplication1.Controllers
         public IEnumerable<string> Get()
         {
             var kmeans = new Kmeans.Kmeans();
-            var lines = GetPoints();
             var coords = ReadPoints();
 
             var coordinates = coords as Coordinate[] ?? coords.ToArray();
@@ -39,7 +38,13 @@ namespace MvcApplication1.Controllers
                 X = t.X, Y = t.Y, Cluster = clustering[i]
             }).ToArray();
 
-            var stringResult = result.Select(i => string.Format("({0:6.F2}, {1:2.F0) : {2}", i.X, i.Y, i.Cluster)).ToArray();
+            // var stringResult = result.Select(i => string.Format("({0:6.F2}, {1:2.F0}) : {2}", i.X, i.Y, i.Cluster)).ToArray();
+            var stringResult = new List<string>();
+            for (var i = 0; i < coordinates.Length; i++)
+            {
+                var item = string.Format("({0}, {1}) : {2}", result[i].X, result[i].Y, result[i].Cluster);
+                stringResult.Add(item);
+            }
 
             return stringResult;
         }
