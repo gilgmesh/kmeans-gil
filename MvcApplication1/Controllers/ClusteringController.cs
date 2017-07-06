@@ -39,7 +39,7 @@ namespace MvcApplication1.Controllers
                 X = t.X, Y = t.Y, Cluster = clustering[i]
             }).ToArray();
 
-            var stringResult = result.Select(i => string.Format("({0:3.3}, {1:3.3}) : {2}", i.X, i.Y, i.Cluster)).ToArray();
+            var stringResult = result.Select(i => string.Format("({0:5.2}, {1:2.0) : {2}", i.X, i.Y, i.Cluster)).ToArray();
 
             return stringResult;
         }
