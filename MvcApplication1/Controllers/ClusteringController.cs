@@ -50,14 +50,39 @@ namespace MvcApplication1.Controllers
         }
 
         // GET clustering?num_clusters=4&max_iterations=100
-        public string Get(int num_clusters, int max_iterations=100)
+        public IEnumerable<string> Get(int num_clusters, int max_iterations = 100)
         {
             var kmeans = new Kmeans.Kmeans();
             var coords = ReadPoints();
 
             var coordinates = coords as Coordinate[] ?? coords.ToArray();
 
-            return "Sarah";
+            double averageDistanceToCentroids;
+            Coordinate[] centroids;
+            int actualInterations;
+            var clustering = kmeans.K_means(
+                num_clusters, 
+                coordinates, 
+                out actualInterations, 
+                out centroids, 
+                out averageDistanceToCentroids, 
+                max_iterations).ToArray();
+
+            var result = coordinates.Select((t, i) => new Triple
+            {
+                X = t.X,
+                Y = t.Y,
+                Cluster = clustering[i]
+            }).ToArray();
+
+            var stringResult = new List<string>();
+            for (var i = 0; i < coordinates.Length; i++)
+            {
+                var item = string.Format("({0}, {1}) : {2}", result[i].X, result[i].Y, result[i].Cluster);
+                stringResult.Add(item);
+            }
+
+            return stringResult;
         }
 
         //

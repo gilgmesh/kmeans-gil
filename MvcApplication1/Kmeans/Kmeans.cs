@@ -76,14 +76,14 @@ namespace MvcApplication1.Kmeans
             return clusteringDictionary[bestK];
         }
 
-        private static IEnumerable<int> K_means(
+        public IEnumerable<int> K_means(
             int k,
             IReadOnlyList<ClusteringController.Coordinate> coords,
             out int actualIterations,
             out ClusteringController.Coordinate[] centroids,
-            out double averageDistanceToCentroids)
+            out double averageDistanceToCentroids,
+            int maxTriesTillDone = 10) // 100;
         {
-            const int maxTriesTillDone = 10; // 100;
             var triesTillDone = maxTriesTillDone;
             Console.WriteLine("k = {0}", k);
             Console.WriteLine("   till done : {0}", triesTillDone);
