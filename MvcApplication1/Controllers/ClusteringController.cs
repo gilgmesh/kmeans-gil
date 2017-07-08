@@ -50,8 +50,13 @@ namespace MvcApplication1.Controllers
         }
 
         // GET clustering?num_clusters=4&max_iterations=100
-        public string Get(int num_clusters=4, int max_iterations=100)
+        public string Get(int num_clusters, int max_iterations=100)
         {
+            var kmeans = new Kmeans.Kmeans();
+            var coords = ReadPoints();
+
+            var coordinates = coords as Coordinate[] ?? coords.ToArray();
+
             return "Sarah";
         }
 
