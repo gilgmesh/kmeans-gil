@@ -29,6 +29,8 @@ namespace MvcApplication1.Kmeans
             const double minimumDrop = 0.02;
             const double maxMarginalDrop = 0.95;
 
+            var maxK = coordinates.Count;
+
             var k = 2;
             var bestK = 0;
 
@@ -64,7 +66,7 @@ namespace MvcApplication1.Kmeans
                 currentDrop = nextAverageDistanceToCentroids/distanceDictionary[2];
                 var marginalDrop = currentDrop/preiousDrop;
 
-                if ((marginalDrop < maxMarginalDrop) || (marginalDrop > 1.0))
+                if (((marginalDrop < maxMarginalDrop) || (marginalDrop > 1.0)) && (k < maxK))
                     continue;
 
                 done = true;

@@ -35,7 +35,9 @@ namespace MvcApplication1.Controllers
 
             var result = coordinates.Select((t, i) => new Triple
             {
-                X = t.X, Y = t.Y, Cluster = clustering[i]
+                X = t.X,
+                Y = t.Y,
+                Cluster = clustering[i]
             }).ToArray();
 
             // var stringResult = result.Select(i => string.Format("({0:6.F2}, {1:2.F0}) : {2}", i.X, i.Y, i.Cluster)).ToArray();
@@ -49,8 +51,8 @@ namespace MvcApplication1.Controllers
             return stringResult;
         }
 
-        // GET clustering?num_clusters=4&max_iterations=100
-        public IEnumerable<string> Get(int num_clusters, int max_iterations = 100)
+        // GET clustering?num_clusters=4&max_iterations=10
+        public IEnumerable<string> Get(int num_clusters, int max_iterations = 10)
         {
             var kmeans = new Kmeans.Kmeans();
             var coords = ReadPoints();
@@ -61,11 +63,11 @@ namespace MvcApplication1.Controllers
             Coordinate[] centroids;
             int actualInterations;
             var clustering = kmeans.K_means(
-                num_clusters, 
-                coordinates, 
-                out actualInterations, 
-                out centroids, 
-                out averageDistanceToCentroids, 
+                num_clusters,
+                coordinates,
+                out actualInterations,
+                out centroids,
+                out averageDistanceToCentroids,
                 max_iterations).ToArray();
 
             var result = coordinates.Select((t, i) => new Triple
@@ -85,14 +87,122 @@ namespace MvcApplication1.Controllers
             return stringResult;
         }
 
-        //
-        // GET: /Clustering/Details/5
-        /*
-        public ActionResult Details(int id)
+        // PUT clustering
+        public IEnumerable<string> Put([FromBody]string coordsText)
         {
-            // return View();
+            var kmeans = new Kmeans.Kmeans();
+
+            bool success;
+            var coords = ParsePoints(coordsText, out success);
+            if (!success)
+                return null;
+
+            var coordinates = coords as Coordinate[] ?? coords.ToArray();
+
+            double averageDistanceToCentroids;
+            Coordinate[] centroids;
+            var clustering = kmeans.K_means(coordinates, out centroids, out averageDistanceToCentroids).ToArray();
+
+            var result = coordinates.Select((t, i) => new Triple
+            {
+                X = t.X,
+                Y = t.Y,
+                Cluster = clustering[i]
+            }).ToArray();
+
+            var stringResult = new List<string>();
+            for (var i = 0; i < coordinates.Length; i++)
+            {
+                var item = string.Format("({0}, {1}) : {2}", result[i].X, result[i].Y, result[i].Cluster);
+                stringResult.Add(item);
+            }
+
+            return stringResult;
         }
-        */
+
+        // POST clustering
+        public IEnumerable<string> Post([FromBody]string coordsText)
+        {
+            return Put(coordsText);
+        }
+
+        // PUT clustering?num_clusters=4&max_iterations=10
+        public IEnumerable<string> Put([FromBody]string coordsText, [FromUri]int num_clusters, [FromUri]int max_iterations = 10)
+        {
+            var kmeans = new Kmeans.Kmeans();
+
+            bool success;
+            var coords = ParsePoints(coordsText, out success);
+            if (!success)
+                return null;
+
+            var coordinates = coords as Coordinate[] ?? coords.ToArray();
+
+            double averageDistanceToCentroids;
+            Coordinate[] centroids;
+            int actualInterations;
+            var clustering = kmeans.K_means(
+                num_clusters,
+                coordinates,
+                out actualInterations,
+                out centroids,
+                out averageDistanceToCentroids,
+                max_iterations).ToArray();
+
+            var result = coordinates.Select((t, i) => new Triple
+            {
+                X = t.X,
+                Y = t.Y,
+                Cluster = clustering[i]
+            }).ToArray();
+
+            var stringResult = new List<string>();
+            for (var i = 0; i < coordinates.Length; i++)
+            {
+                var item = string.Format("({0}, {1}) : {2}", result[i].X, result[i].Y, result[i].Cluster);
+                stringResult.Add(item);
+            }
+
+            return stringResult;
+        }
+
+        // POST clustering?num_clusters=4&max_iterations=10
+        public IEnumerable<string> Post([FromBody]string coordsText, [FromUri]int num_clusters, [FromUri]int max_iterations = 10)
+        {
+            return Put(coordsText, num_clusters, max_iterations);
+        }
+
+        private IEnumerable<Coordinate> ParsePoints(string coordsText, out bool success)
+        {
+            if (coordsText == null)
+            {
+                success = false;
+                return null;
+            }
+
+            var length = coordsText.Length;
+            if ((length < 1) || ((coordsText[0] != '[') && (coordsText[length - 1] != ']')))
+            {
+                success = false;
+                return null;
+            }
+
+            var envelope = coordsText.Split('[',']');
+            var body = envelope[1];
+            var points = body.Split(';');
+
+            var coords = new List<Coordinate>();
+            foreach (var point in points)
+            {
+                var items = point.Split(',');
+                var coord = new Coordinate { X = Double.Parse(items[0]), Y = Double.Parse(items[1]) };
+
+                coords.Add(coord);
+            }
+
+            success = true;
+            return coords;
+        }
 
         private IEnumerable<Coordinate> ReadPoints()
         {
